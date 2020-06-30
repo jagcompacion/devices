@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-function App() {
+import PrivateRoute from 'components/PrivateRoute';
+
+import Register from 'pages/Register';
+import Login from 'pages/Login';
+import ForgotPassword from 'pages/ForgotPassword';
+import ResetPassword from 'pages/ResetPassword';
+import Error404 from 'pages/Error404';
+import Main from 'pages/Main';
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/forgot-password" component={ForgotPassword} />
+        <Route path="/reset-password/:token" component={ResetPassword} />
+        <Route path="/404" component={Error404} />
+        <PrivateRoute isAuthenticated path="/" redirect="/login" component={Main} />
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;
