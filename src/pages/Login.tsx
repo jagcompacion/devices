@@ -1,34 +1,45 @@
-import React from 'react';
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import LoginForm from 'components/LoginForm';
+import styled from 'styled-components';
+import { AuthInput } from 'types';
+import { useDispatch } from 'react-redux';
+import { login } from '../actions/auth';
+import { errorToast } from '../utils/toast';
 
-const Login: React.FC = () => {
+const ContainerWrapper = styled.div`
+  height: 100%;
+  background: #273238;
+`;
+
+const Login: React.FC<RouteComponentProps> = ({ history }: RouteComponentProps) => {
+  const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(false);
+  const handleSubmit = async (input: AuthInput) => {
+    setLoading(true);
+    try {
+      const response: any = await dispatch(login(input));
+      localStorage.setItem('accessToken', response.payload);
+      setLoading(false);
+      history.push('/');
+    } catch (err) {
+      errorToast(err.toString());
+      setLoading(false);
+    }
+  };
+
   return (
-    <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col sm="4">
-          <Form>
-            <h4 className="mb-3">Login</h4>
-            <Form.Group>
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="Enter email" />
-              <Form.Text className="text-muted">We{"'"}ll never share your email with anyone else.</Form.Text>
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Password</Form.Label>
-              <Form.Control type="password" placeholder="Password" />
-            </Form.Group>
-            <Form.Group>
-              <Form.Check type="checkbox" label="Always let me logged in" />
-            </Form.Group>
-            <Button className="mt-4" type="submit" block>
-              Login
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+    <ContainerWrapper>
+      <Container className="py-5">
+        <Row className="justify-content-center">
+          <Col sm="4">
+            <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
+          </Col>
+        </Row>
+      </Container>
+    </ContainerWrapper>
   );
 };
 
-export default Login;
+export default withRouter(Login);
