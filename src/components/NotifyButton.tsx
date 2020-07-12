@@ -12,12 +12,15 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       await dispatch(
-        notify({
-          name: 'Jess Anthony G. Compacion',
-          email: 'jagcompacion@gmail.com',
-          repoUrl: 'https://github.com/jagcompacion/devices',
-          message: 'Im finished',
-        }),
+        notify(
+          {
+            name: 'Jess Anthony G. Compacion',
+            email: 'jagcompacion@gmail.com',
+            repoUrl: 'https://github.com/jagcompacion/devices',
+            message: 'Im finished',
+          },
+          localStorage.getItem('accessToken') || '',
+        ),
       );
       successToast('Notify success');
       setLoading(false);

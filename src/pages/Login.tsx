@@ -20,7 +20,8 @@ const Login: React.FC<RouteComponentProps> = ({ history }: RouteComponentProps) 
     setLoading(true);
     try {
       const response: any = await dispatch(login(input));
-      localStorage.setItem('accessToken', response.payload);
+      const { accessToken } = response.payload;
+      localStorage.setItem('accessToken', accessToken);
       setLoading(false);
       history.push('/');
     } catch (err) {
